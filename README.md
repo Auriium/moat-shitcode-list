@@ -1,8 +1,7 @@
 # moat-shitcode-list
 A list of potentially exploitable vulnerabilities in the Moat TTT Source Code
 
-# possible exploits
-- SQL Injection 
+# SQL injection
 
 YOU LITERALLY HAVE THE FUCKING ABILITY TO USE PREPARED STATEMENTS and yet we have shit like sv_invs_sql.lua
 
@@ -24,13 +23,33 @@ function m_InsertCompTicket(c, cb, cbf)
 end
 ```
 
-Instead of using prepared statements like INSERT INTO moat_shit VALUES(?) 
-Moat's codebase does INSERT INTO moat_shit VALUES("hi")
+Instead of using prepared statements like 
+```
+INSERT INTO moat_shit VALUES(?,?) 
+```
 
-defeating the purpose of even trying to prepare a statement or delegating it to an internal wrapper - it doesn't matter, it's still vulnerable.
+PreparedStatement.setString("hi")
+Moat's codebase does 
+```
+INSERT INTO moat_shit VALUES(hi + "," + cringe)
+```
+
+For the sake of examples, let's assume ""hi"" is the user input, or maybe the name / comments of the person making the ticket - i don't fucking know since i'm not moat staff and i've never used their ticket thing.
+
+If i was to write my ticket comment "hi" as the following SQL Injection 
+
+```
+test'); DROP TABLE moat_shit; --
+```
+
+in the top example, the ticket would simply have a ticket comment saying "test'); DROP TABLE moat_shit; --"
+
+in the bottom example, the above SQL code would be executed directly into the SQL server instantly deleting the database table moat_shit and all the items/players/inventories in it and causing mass panic
+
+This here is defeating the purpose of even trying to prepare a statement or delegating it to an internal wrapper - it doesn't matter, it's still vulnerable.
 
 I don't know the extent of moat / mysqloo's escape function but i can guaruntee you unless it's a bona fide commercial grade WAF someone will find a way to sneak a character past it
 
-- Shitty netcode explotation
+# Shitty netcode explotation
 
 I gotta find a good example of this but ohh it's in there
