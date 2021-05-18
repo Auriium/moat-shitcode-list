@@ -25,10 +25,11 @@ end
 
 Instead of using prepared statements like 
 ```
-INSERT INTO moat_shit VALUES(?,?) 
-```
+INSERT INTO moat_shit VALUES(?,?) -- this here goes into the statement
 
-PreparedStatement.setString("hi")
+statement.setString(1,"hi")
+statement.setString(2,"hi")
+```
 Moat's codebase does 
 ```
 INSERT INTO moat_shit VALUES(hi + "," + cringe)
